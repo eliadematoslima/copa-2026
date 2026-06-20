@@ -1,23 +1,22 @@
 // js/components/groups.js
 import { groupsData } from '../data/teams.js';
+import { matchesData } from '../data/matches.js';
 
 export function renderGroupsView() {
     const container = document.getElementById('grupos');
     if (!container) return;
 
-    // Limpa o conteúdo estático inicial
     container.innerHTML = '<h2>Fase de Grupos</h2>';
 
-    // Grid que vai envelopar todos os 12 grupos
     const groupsGrid = document.createElement('div');
     groupsGrid.className = 'groups-grid';
 
-    // Percorre cada grupo (A, B, C...) de groupsData
     Object.keys(groupsData).forEach(groupLetter => {
         const groupCard = document.createElement('div');
         groupCard.className = 'group-card';
 
-        let tableHTML = `
+        // 1. Monta a tabela de classificação (igual antes)
+        let htmlContent = `
             <h3>Grupo ${groupLetter}</h3>
             <table class="group-table">
                 <thead>
@@ -32,10 +31,9 @@ export function renderGroupsView() {
                 <tbody>
         `;
 
-        // Renderiza as 4 seleções do grupo (inicialmente tudo zerado)
         groupsData[groupLetter].forEach((team, index) => {
-            tableHTML += `
-                <tr>
+            htmlContent += `
+                <tr id="row-${team.id}">
                     <td class="team-cell">
                         <span class="position">${index + 1}º</span>
                         <span class="flag">${team.flag}</span>
@@ -49,12 +47,48 @@ export function renderGroupsView() {
             `;
         });
 
-        tableHTML += `
+        htmlContent += `
                 </tbody>
             </table>
+            
+            <div class="group-matches">
+                <h4>Jogos</h4>
         `;
 
-        groupCard.innerHTML = tableHTML;
+        // Busca as partidas geradas dinamicamente para este grupo
+        const groupMatches = matchesData[groupLetter];
+        
+        groupMatches.forEach(match => {
+            // Busca os dados do time completo (nome e bandeira) usando o ID
+            const t1 = groupsData[groupLetter].find(t => t.id === match.team1);
+            const t2 = groupsData[groupLetter].find(t => t.id === match.team2);
+
+            htmlContent += `
+                <div class="match-row" data-match-id="${match.id}">
+                    <div class="match-team team-left">
+                        <span class="team-name-short">${t1.name}</span>
+                        <span class="flag">${t1.flag}</span>
+                    </div>
+                    
+                    <div class="match-score-inputs">
+                        <input type="number" min="0" class="score-input" data-match="${match.id}" data-team="1" placeholder="-">
+                        <span class="x">x</span>
+                        <input type="number" min="0" class="score-input" data-match="${match.id}" data-team="2" placeholder="-">
+                    </div>
+                    
+                    <div class="match-team team-right">
+                        <span class="flag">${t2.flag}</span>
+                        <span class="team-name-short">${t2.name}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        htmlContent += `
+            </div>
+        `;
+
+        groupCard.innerHTML = htmlContent;
         groupsGrid.appendChild(groupCard);
     });
 
