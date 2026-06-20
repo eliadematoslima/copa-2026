@@ -32,7 +32,7 @@ export const groupsData = {
         { id: "CUW", name: "Curaçao", flag: "https://flagcdn.com/cw.svg" }
     ],
     F: [
-        { id: "NED", name: "Países Baixos", flag: "https://flagcdn.com/nl.svg" },
+        { id: "NED", name: "Holanda", flag: "https://flagcdn.com/nl.svg" },
         { id: "SWE", name: "Suécia", flag: "https://flagcdn.com/se.svg" },
         { id: "JPN", name: "Japão", flag: "https://flagcdn.com/jp.svg" },
         { id: "TUN", name: "Tunísia", flag: "https://flagcdn.com/tn.svg" }
