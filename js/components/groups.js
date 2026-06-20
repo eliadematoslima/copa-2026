@@ -47,7 +47,7 @@ export function renderGroupsView() {
                 <div class="match-row">
                     <div class="match-team team-left">
                         <span class="team-name-short">${t1.name}</span>
-                        <span class="flag">${t1.flag}</span>
+                        <img class="flag-img" src="${t1.flag}">
                     </div>
                     
                     <div class="match-score-inputs">
@@ -57,7 +57,7 @@ export function renderGroupsView() {
                     </div>
                     
                     <div class="match-team team-right">
-                        <span class="flag">${t2.flag}</span>
+                        <img class="flag-img" src="${t2.flag}">
                         <span class="team-name-short">${t2.name}</span>
                     </div>
                 </div>
@@ -68,39 +68,34 @@ export function renderGroupsView() {
             </div>
         `;
 
-        // ... código anterior do Object.keys(groupsData).forEach ...
-        
         groupCard.innerHTML = htmlContent;
         groupsGrid.appendChild(groupCard);
     });
 
-    // 1º ENTRA NA TELA: Anexa a grade completa ao container principal primeiro
+    // Garante a inserção na tela antes do cálculo
     container.appendChild(groupsGrid);
 
-    // 2º DEPOIS ATUALIZA: Agora que os elementos existem no DOM, rodamos o cálculo inicial
+    // Renderiza os dados iniciais corretos
     Object.keys(groupsData).forEach(groupLetter => {
         updateGroupTableHTML(groupLetter);
     });
 }
 
-// Atualiza apenas as linhas da tabela de um grupo específico mantendo a ordem correta
 export function updateGroupTableHTML(groupLetter) {
     const tbody = document.querySelector(`#table-${groupLetter} tbody`);
     if (!tbody) return;
 
-    // Calcula a tabela ordenada atualizada usando a Engine
     const sortedData = calculateGroupTable(groupLetter, matchesData[groupLetter]);
     
     let rowsHTML = '';
     sortedData.forEach((stats, index) => {
-        // Encontra o nome e bandeira do time correspondente
         const teamInfo = groupsData[groupLetter].find(t => t.id === stats.id);
 
         rowsHTML += `
             <tr>
                 <td class="team-cell">
                     <span class="position">${index + 1}º</span>
-                    <span class="flag">${teamInfo.flag}</span>
+                    <img class="flag-img" src="${teamInfo.flag}">
                     <span class="team-name">${teamInfo.name}</span>
                 </td>
                 <td><strong>${stats.P}</strong></td>

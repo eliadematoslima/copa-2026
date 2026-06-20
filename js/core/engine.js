@@ -6,19 +6,16 @@ function createEmptyStats(teamId) {
     return { id: teamId, P: 0, J: 0, V: 0, E: 0, D: 0, SG: 0, GP: 0, GC: 0 };
 }
 
-// Calcula as estatísticas de um grupo baseado nos seus jogos atuais
+// 1. CALCULA A TABELA DE UM GRUPO INDIVIDUAL (O que o groups.js precisa)
 export function calculateGroupTable(groupLetter, groupMatches) {
     const teams = groupsData[groupLetter];
     const tableStats = {};
 
-    // Inicializa todos os times do grupo com zero
     teams.forEach(team => {
         tableStats[team.id] = createEmptyStats(team.id);
     });
 
-    // Processa cada partida do grupo
     groupMatches.forEach(match => {
-        // Só calcula se ambos os placares forem preenchidos (números válidos)
         if (match.score1 !== null && match.score2 !== null && !isNaN(match.score1) && !isNaN(match.score2)) {
             const s1 = parseInt(match.score1);
             const s2 = parseInt(match.score2);
@@ -48,31 +45,22 @@ export function calculateGroupTable(groupLetter, groupMatches) {
         }
     });
 
-    // Converte o objeto em Array para podermos ordenar
     const sortedTable = Object.values(tableStats);
 
-    // ORDENAÇÃO USANDO OS CRITÉRIOS OFICIAIS DA FIFA 2026
+    // Ordenação por critérios de desempate
     sortedTable.sort((a, b) => {
-        // 1º Critério: Pontos
         if (b.P !== a.P) return b.P - a.P;
-
-        // 2º Critério: Confronto Direto (apenas se houver empate de pontos)
         const headToHead = getHeadToHeadResult(groupMatches, a.id, b.id);
         if (headToHead !== 0) return headToHead;
-
-        // 3º Critério: Saldo de Gols Geral
         if (b.SG !== a.SG) return b.SG - a.SG;
-
-        // 4º Critério: Gols Pró Geral
         if (b.GP !== a.GP) return b.GP - a.GP;
-
-        return 0; // Se persistir, mantém a ordem original (ou ranking)
+        return 0;
     });
 
     return sortedTable;
 }
 
-// Função auxiliar para calcular o Confronto Direto entre dois times específicos
+// Função auxiliar para o Confronto Direto
 function getHeadToHeadResult(matches, teamAId, teamBId) {
     const directMatch = matches.find(m => 
         (m.team1 === teamAId && m.team2 === teamBId) || 
@@ -84,15 +72,39 @@ function getHeadToHeadResult(matches, teamAId, teamBId) {
     const s1 = parseInt(directMatch.score1);
     const s2 = parseInt(directMatch.score2);
 
-    // Se o time 1 for o Team A
     if (directMatch.team1 === teamAId) {
-        if (s1 > s2) return -1; // A ganha (b vem depois)
-        if (s2 > s1) return 1;  // B ganha (b vem antes)
-    } else { // Se o time 2 for o Team A
-        if (s2 > s1) return -1; // A ganha
-        if (s1 > s2) return 1;  // B ganha
+        if (s1 > s2) return -1;
+        if (s2 > s1) return 1;
+    } else {
+        if (s2 > s1) return -1;
+        if (s1 > s2) return 1;
     }
-    
-    // Se empatou no confronto direto, decide pelo saldo de gols do confronto direto
     return 0;
+}
+
+// 2. CALCULA OS TERCEIROS LUGARES DE TODOS OS GRUPOS (O que o thirds.js precisa)
+export function calculateAllThirdPlaces(matchesDataGlobal) {
+    const allThirds = [];
+
+    Object.keys(matchesDataGlobal).forEach(groupLetter => {
+        const groupMatches = matchesDataGlobal[groupLetter];
+        const sortedGroup = calculateGroupTable(groupLetter, groupMatches);
+        const thirdPlaceStats = sortedGroup[2]; // Posição 3º (índice 2)
+        
+        if (thirdPlaceStats) {
+            allThirds.push({
+                ...thirdPlaceStats,
+                group: groupLetter
+            });
+        }
+    });
+
+    allThirds.sort((a, b) => {
+        if (b.P !== a.P) return b.P - a.P;
+        if (b.SG !== a.SG) return b.SG - a.SG;
+        if (b.GP !== a.GP) return b.GP - a.GP;
+        return 0;
+    });
+
+    return allThirds;
 }

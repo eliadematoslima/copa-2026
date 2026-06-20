@@ -148,17 +148,23 @@ header h1 {
     width: 55%;
 }
 
+/* Atualize estas duas classes no seu css/styles.css */
+
 .team-cell {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.5rem;          /* <-- Controla rigidamente o espaço entre os elementos */
+    white-space: nowrap;  /* <-- Impede quebras de texto que empurram elementos */
 }
 
 .position {
     color: #a0aec0;
     font-size: 0.75rem;
     font-weight: bold;
-    width: 18px;
+    display: inline-flex;  /* <-- Alinha perfeitamente o texto interno */
+    align-items: center;
+    width: 20px;           /* <-- Reduzido para colar mais na bandeira se desejar */
+    flex-shrink: 0;        /* <-- Garante que a caixinha nunca esmague */
 }
 
 .flag {
@@ -266,4 +272,45 @@ header h1 {
     font-size: 0.75rem;
     color: #a0aec0;
     font-weight: bold;
+}
+
+/* --- ESTILOS DA TABELA DE TERCEIROS (PASSO 5) --- */
+.thirds-table th, .thirds-table td {
+    padding: 0.75rem 0.5rem;
+}
+
+.group-badge {
+    background-color: #e2e8f0;
+    color: #4a5568;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* Verde suave para classificados */
+.qualified-row {
+    background-color: rgba(72, 187, 120, 0.08);
+}
+.qualified-row td:first-child {
+    color: #38a169;
+}
+
+/* Vermelho suave para eliminados */
+.eliminated-row {
+    background-color: rgba(245, 101, 101, 0.05);
+}
+.eliminated-row td:first-child {
+    color: #e53e3e;
+}
+
+/* --- ESTILO DAS BANDEIRAS EM IMAGEM --- */
+.flag-img {
+    width: 22px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    display: inline-block;
+    flex-shrink: 0;
 }
