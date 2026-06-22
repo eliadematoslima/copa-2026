@@ -1,13 +1,16 @@
 // js/main.js
 import { renderGroupsView, updateGroupTableHTML } from './components/groups.js';
-import { renderThirdsView, updateThirdsTableHTML } from './components/thirds.js'; // <-- Adicionado
+import { renderThirdsView, updateThirdsTableHTML } from './components/thirds.js';
+import { renderBracketView, updateBracketHTML, knockoutPlacards } from './components/bracket.js'; // <-- Importado
 import { matchesData } from './data/matches.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initTabs();
     renderGroupsView();
-    renderThirdsView(); // <-- Inicializa a estrutura da aba de terceiros
+    renderThirdsView();
+    renderBracketView(); // <-- Inicializa a estrutura visual dos 16avos
     initMatchInputs();
+    initKnockoutInputs(); // <-- Inicializa ouvintes do mata-mata
 });
 
 function initTabs() {
@@ -24,9 +27,11 @@ function initTabs() {
             const targetContent = document.getElementById(targetTab);
             if (targetContent) targetContent.classList.add('active');
 
-            // SE O USUÁRIO CLICAR NA ABA DE TERCEIROS, RECALCULA E ATUALIZA A TELA
             if (targetTab === 'terceiros') {
                 updateThirdsTableHTML();
+            }
+            if (targetTab === 'fase-16avos') {
+                updateBracketHTML(); // <-- Garante o cálculo e atualização ao clicar na aba
             }
         });
     });
@@ -49,14 +54,31 @@ function initMatchInputs() {
         
         if (match) {
             const scoreValue = val === '' ? null : parseInt(val);
-            
-            if (teamIndex === "1") {
-                match.score1 = scoreValue;
-            } else {
-                match.score2 = scoreValue;
-            }
+            if (teamIndex === "1") match.score1 = scoreValue;
+            else match.score2 = scoreValue;
 
             updateGroupTableHTML(groupLetter);
         }
+    });
+}
+
+// Nova função para escutar placares do mata-mata
+function initKnockoutInputs() {
+    const container = document.getElementById('fase-16avos');
+    if (!container) return;
+
+    container.addEventListener('input', (e) => {
+        if (!e.target.classList.contains('knockout-input')) return;
+
+        const input = e.target;
+        const matchId = input.getAttribute('data-match');
+        const teamIndex = input.getAttribute('data-team');
+        const val = input.value;
+
+        if (!knockoutPlacards[matchId]) {
+            knockoutPlacards[matchId] = { score1: null, score2: null };
+        }
+
+        knockoutPlacards[matchId][`score${teamIndex}`] = val === '' ? null : parseInt(val);
     });
 }

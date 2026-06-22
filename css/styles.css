@@ -314,3 +314,41 @@ header h1 {
     display: inline-block;
     flex-shrink: 0;
 }
+
+/* --- ESTILOS DOS 16AVOS DE FINAL (PASSO 6) --- */
+.bracket-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.knockout-match-card {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.match-label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.knockout-team-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+}
+
+.team-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
