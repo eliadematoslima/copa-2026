@@ -51,9 +51,13 @@ export function renderGroupsView() {
                     </div>
                     
                     <div class="match-score-inputs">
-                        <input type="number" min="0" class="score-input" data-group="${groupLetter}" data-match="${match.id}" data-team="1" placeholder="-">
+                        <input type="number" min="0" class="score-input" 
+                            data-group="${groupLetter}" data-match="${match.id}" data-team="1" 
+                            value="${match.score1 ?? ''}" placeholder="-"> <!-- <-- Alterado para pegar match.score1 -->
                         <span class="x">x</span>
-                        <input type="number" min="0" class="score-input" data-group="${groupLetter}" data-match="${match.id}" data-team="2" placeholder="-">
+                        <input type="number" min="0" class="score-input" 
+                            data-group="${groupLetter}" data-match="${match.id}" data-team="2" 
+                            value="${match.score2 ?? ''}" placeholder="-"> <!-- <-- Alterado para pegar match.score2 -->
                     </div>
                     
                     <div class="match-team team-right">
