@@ -1,4 +1,5 @@
 // js/main.js
+import { renderFinalStagesView, updateFinalStagesHTML } from './components/finalStages.js';
 import { renderGroupsView, updateGroupTableHTML } from './components/groups.js';
 import { renderThirdsView, updateThirdsTableHTML } from './components/thirds.js';
 import { renderBracketView, updateBracketHTML, knockoutPlacards } from './components/bracket.js';
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderGroupsView();
     renderThirdsView();
     renderBracketView();
+    renderFinalStagesView();
     initMatchInputs();
     initKnockoutInputs();
     
@@ -65,6 +67,9 @@ function initTabs() {
             }
             if (targetTab === 'fase-16avos') {
                 updateBracketHTML();
+            }
+            if (targetTab === 'fases-finais') {
+                updateFinalStagesHTML();
             }
         });
     });
